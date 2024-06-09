@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
-// defineProps<{ width: number; height: number }>();
+import { onMounted, ref } from "vue";
+import Paddle from "./Paddle.vue";
+import { DebugInfomation, executeGameLoop } from "@/core/gameloop";
+
+const componentDebugInfo = ref(new DebugInfomation());
+
+function draw(debugInfo: DebugInfomation): void {
+  componentDebugInfo.value.elapsedFrame = debugInfo.elapsedFrame;
+  componentDebugInfo.value.elapsedTime = debugInfo.elapsedTime;
+}
 
 function onResize() {
   var width = window.innerWidth;
@@ -45,6 +53,8 @@ onMounted(() => {
 
   // Set initial size
   onResize();
+
+  executeGameLoop(draw);
 });
 </script>
 
@@ -85,8 +95,15 @@ onMounted(() => {
 
 <template>
   <div id="field">
+    <p style="color: white">
+      Elapsed Frame : {{ componentDebugInfo.elapsedFrame }} | Elapsed
+      Time(Frame) : {{ (componentDebugInfo.elapsedFrame / 60).toFixed(2) }} |
+      Elapsed Time(s) :
+      {{ (componentDebugInfo.elapsedTime / 1000).toFixed(2) }}
+    </p>
     <div class="center-line"></div>
     <div class="up-line"></div>
     <div class="down-line"></div>
+    <Paddle />
   </div>
 </template>
