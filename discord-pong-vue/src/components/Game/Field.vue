@@ -104,6 +104,8 @@ onMounted(() => {
     <div class="center-line"></div>
     <div class="up-line"></div>
     <div class="down-line"></div>
-    <Paddle />
+
+    <Paddle :initial-y-pos="10" />
+    <Paddle :initial-y-pos="90" />
   </div>
 </template>

@@ -18,7 +18,6 @@ export function executeGameLoop(loopFunction: Function) {
 
   const debugInfo = new DebugInfomation()
   const gameLoop = (currentTime:number) => {
-    console.log("currentTime",currentTime)
     const timeElapsed = currentTime - lastTime;
 
     if(timeElapsed > interval){

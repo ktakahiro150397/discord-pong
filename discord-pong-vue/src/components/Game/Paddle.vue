@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { executeGameLoop } from "@/core/gameloop";
+import { ref, onMounted, computed, defineProps } from "vue";
+
+const props = defineProps<{
+  initialYPos: number;
+}>();
 
 const paddle = ref({
   posX: 40,
-  posY: 100,
-  width: 0,
-  height: 0,
+  posY: 0,
 });
 
 const pressState = ref({
@@ -13,15 +16,45 @@ const pressState = ref({
   down: false,
 });
 
-const posX_MIN = 0;
-const posX_MAX = 76;
+const paddleRef = ref<HTMLImageElement>();
 
-function initializePaddle() {}
+const posX_MIN = 0;
+const posX_MAX = 79;
+
+const canMove = computed(() => {
+  return {
+    canMoveUp: paddle.value.posX > posX_MIN,
+    canMoveDown: paddle.value.posX < posX_MAX,
+  };
+});
+
+function initialize() {
+  paddle.value.posY = props.initialYPos;
+
+  var paddleElement = paddleRef.value;
+  paddleElement!.style.left = paddle.value.posY + "%";
+
+  console.log("paddleElement", paddleElement);
+  console.log("posY", paddle.value.posY);
+
+  console.log("paddle.value", paddle.value);
+}
+
+function gameLoop() {
+  if (pressState.value.up && canMove.value.canMoveUp) {
+    paddle.value.posX -= 1;
+    console.log("paddle.value.posX", paddle.value.posX);
+  }
+
+  if (pressState.value.down && canMove.value.canMoveDown) {
+    paddle.value.posX += 1;
+    console.log("paddle.value.posX", paddle.value.posX);
+  }
+}
 
 onMounted(() => {
   // Add keydown event listener
   window.addEventListener("keydown", (e) => {
-    console.log(e.key, paddle.value.posX);
     if (e.key === "ArrowUp") {
       pressState.value.up = true;
     }
@@ -31,28 +64,22 @@ onMounted(() => {
   });
 
   window.addEventListener("keyup", (e) => {
-    console.log(e.key, paddle.value.posX);
+    console.log("keyup", e.key);
     if (e.key === "ArrowUp") {
-      pressState.value.down = false;
+      pressState.value.up = false;
     }
     if (e.key === "ArrowDown") {
       pressState.value.down = false;
     }
   });
 
-  //   if (posX_MIN < paddle.value.posX && paddle.value.posX <= posX_MAX) {
-  //     paddle.value.posX -= 1;
-  //   }
-  // } else if (e.key === "ArrowDown") {
-  //   if (posX_MIN <= paddle.value.posX && paddle.value.posX < posX_MAX) {
-  //     paddle.value.posX += 1;
-  //   }
-  // }
+  initialize();
+  executeGameLoop(gameLoop);
 });
 </script>
 
 <template>
-  <div id="paddle" :style="{ top: paddle.posX + '%' }"></div>
+  <div id="paddle" ref="paddleRef" :style="{ top: paddle.posX + '%' }"></div>
 </template>
 
 <style scoped>
@@ -60,8 +87,7 @@ onMounted(() => {
   background-color: orange;
   position: absolute;
   top: 30%;
-  left: 10%;
-  width: 10px;
+  width: 15px;
   height: 150px;
 }
 </style>
