@@ -6,14 +6,37 @@ function onResize() {
   var width = window.innerWidth;
   var height = width * (9 / 16);
 
+  var appDiv = document.getElementById("field");
+
+  // Set the actual size of the game
+  const screenSize = setBackGround(appDiv!, width, height);
+
+  // Draw lines
+  drawLines(appDiv!, screenSize.actualWidth, screenSize.actualHeight);
+}
+
+function setBackGround(
+  appDiv: HTMLElement,
+  width: number,
+  height: number
+): { actualWidth: number; actualHeight: number } {
   if (height > window.innerHeight) {
     height = window.innerHeight;
     width = height * (16 / 9);
   }
 
-  var appDiv = document.getElementById("field");
   appDiv!.style.width = `${width}px`;
   appDiv!.style.height = `${height}px`;
+
+  return { actualWidth: width, actualHeight: height };
+}
+
+function drawLines(
+  appDiv: HTMLElement,
+  actualWidth: number,
+  actualHeight: number
+) {
+  // Draw center line
 }
 
 onMounted(() => {
@@ -28,9 +51,42 @@ onMounted(() => {
 <style scoped>
 #field {
   background-color: black;
+  position: relative;
+}
+
+#field .center-line {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 5px;
+  height: 100%;
+  background-color: white;
+}
+
+#field .up-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: red;
+}
+
+#field .down-line {
+  position: absolute;
+  bottom: 0.1%; /* もうすこし賢い指定があると思う */
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: blue;
 }
 </style>
 
 <template>
-  <div id="field"></div>
+  <div id="field">
+    <div class="center-line"></div>
+    <div class="up-line"></div>
+    <div class="down-line"></div>
+  </div>
 </template>
