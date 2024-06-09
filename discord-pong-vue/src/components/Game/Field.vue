@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import Paddle from "./Paddle.vue";
+import Ball from "./Ball.vue";
 import { DebugInfomation, executeGameLoop } from "@/core/gameloop";
 
 const componentDebugInfo = ref(new DebugInfomation());
@@ -8,6 +9,12 @@ const componentDebugInfo = ref(new DebugInfomation());
 function draw(debugInfo: DebugInfomation): void {
   componentDebugInfo.value.elapsedFrame = debugInfo.elapsedFrame;
   componentDebugInfo.value.elapsedTime = debugInfo.elapsedTime;
+
+  // キー入力管理
+
+  // ボールの開始処理
+
+  // ゲームの状態管理
 }
 
 function onResize() {
@@ -107,5 +114,6 @@ onMounted(() => {
 
     <Paddle :initial-y-pos="10" />
     <Paddle :initial-y-pos="90" />
+    <Ball />
   </div>
 </template>
