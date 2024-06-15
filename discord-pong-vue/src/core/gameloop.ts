@@ -54,7 +54,7 @@ export class GameLoop {
   public executeGameLoop(loopFunction: LoopFunction) {
     let lastTime = 0
 
-    const fps = 30;
+    const fps = 60;
     const interval = 1000 / fps;
 
     const gameLoop = (currentTime: number) => {

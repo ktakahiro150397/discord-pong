@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DebugInfomation, GameLoop } from "@/core/gameloop";
-import { ref, onMounted, computed, defineProps } from "vue";
 import { KeyPressState } from "@/core/keyinput";
+import { ref, onMounted, computed, defineProps } from "vue";
 
 const props = defineProps<{
   initialYPos: number;
