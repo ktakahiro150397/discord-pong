@@ -2,11 +2,12 @@
 import { onMounted, ref } from "vue";
 import Paddle from "./Paddle.vue";
 import Ball from "./Ball.vue";
-import { DebugInfomation, executeGameLoop } from "@/core/gameloop";
+import { GameLoop, DebugInfomation } from "@/core/gameloop";
+import { KeyPressState } from "@/core/keyinput";
 
 const componentDebugInfo = ref(new DebugInfomation());
 
-function draw(debugInfo: DebugInfomation): void {
+function draw(debugInfo: DebugInfomation, pressState: KeyPressState): void {
   componentDebugInfo.value.elapsedFrame = debugInfo.elapsedFrame;
   componentDebugInfo.value.elapsedTime = debugInfo.elapsedTime;
 
@@ -61,7 +62,8 @@ onMounted(() => {
   // Set initial size
   onResize();
 
-  executeGameLoop(draw);
+  const loop = GameLoop.instance;
+  loop.executeGameLoop(draw);
 });
 </script>
 

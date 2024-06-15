@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { executeGameLoop } from "@/core/gameloop";
+import { DebugInfomation, GameLoop } from "@/core/gameloop";
 import { ref, onMounted, computed, defineProps } from "vue";
+import { KeyPressState } from "@/core/keyinput";
 
 const props = defineProps<{
   initialYPos: number;
@@ -9,11 +10,6 @@ const props = defineProps<{
 const paddle = ref({
   posX: 40,
   posY: 0,
-});
-
-const pressState = ref({
-  up: false,
-  down: false,
 });
 
 const paddleRef = ref<HTMLImageElement>();
@@ -40,41 +36,23 @@ function initialize() {
   console.log("paddle.value", paddle.value);
 }
 
-function gameLoop() {
-  if (pressState.value.up && canMove.value.canMoveUp) {
+function gameLoop(debugInfo: DebugInfomation, pressState: KeyPressState) {
+  if (pressState.up && canMove.value.canMoveUp) {
     paddle.value.posX -= 1;
     console.log("paddle.value.posX", paddle.value.posX);
   }
 
-  if (pressState.value.down && canMove.value.canMoveDown) {
+  if (pressState.down && canMove.value.canMoveDown) {
     paddle.value.posX += 1;
     console.log("paddle.value.posX", paddle.value.posX);
   }
 }
 
 onMounted(() => {
-  // Add keydown event listener
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowUp") {
-      pressState.value.up = true;
-    }
-    if (e.key === "ArrowDown") {
-      pressState.value.down = true;
-    }
-  });
-
-  window.addEventListener("keyup", (e) => {
-    console.log("keyup", e.key);
-    if (e.key === "ArrowUp") {
-      pressState.value.up = false;
-    }
-    if (e.key === "ArrowDown") {
-      pressState.value.down = false;
-    }
-  });
-
   initialize();
-  executeGameLoop(gameLoop);
+
+  const loop = GameLoop.instance;
+  loop.executeGameLoop(gameLoop);
 });
 </script>
 
