@@ -1,0 +1,16 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: discord-pong
+    working_dir: /app
+    volumes:
+      - .:/app
+      - node_modules:/usr/src/app/node_modules
+      
+    ports:
+      - "5173:5173"
+    command: npm run dev
+volumes:
+  node_modules:
